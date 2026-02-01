@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dil</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 50%, #7FCD91 100%);
+    font-family: 'Comic Neue', cursive;
+    overflow: hidden;
+    position: relative;
+}
+
+/* CARTOON CLOUDS */
+.cloud {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    filter: drop-shadow(3px 3px 0 #333);
+}
+
+.cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.cloud-1 { width: 120px; height: 50px; top: 8%; left: 10%; }
+.cloud-1::before { width: 60px; height: 60px; top: -30px; left: 20px; }
+.cloud-1::after { width: 70px; height: 70px; top: -40px; left: 50px; }
+
+.cloud-2 { width: 100px; height: 40px; top: 5%; right: 15%; }
+.cloud-2::before { width: 50px; height: 50px; top: -25px; left: 15px; }
+.cloud-2::after { width: 55px; height: 55px; top: -30px; left: 40px; }
+
+.cloud-3 { width: 80px; height: 35px; top: 15%; left: 50%; }
+.cloud-3::before { width: 40px; height: 40px; top: -20px; left: 10px; }
+.cloud-3::after { width: 45px; height: 45px; top: -25px; left: 35px; }
+
+/* FLOATING SHIN-CHAN EMOJIS */
+.shinchan-emoji {
+    position: absolute;
+    font-size: 3rem;
+    animation: bounce 2s infinite ease-in-out;
+    filter: drop-shadow(2px 2px 0 #333);
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+/* GRASS AT BOTTOM */
+.grass {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: #4CAF50;
+    border-top: 5px solid #333;
+}
+
+.grass::before {
+    content: '🌸🌼🌷🌻🌸🌼🌷🌻🌸🌼🌷🌻🌸🌼🌷🌻🌸🌼🌷🌻';
+    position: absolute;
+    top: -25px;
+    left: 0;
+    font-size: 1.5rem;
+    letter-spacing: 10px;
+    animation: sway 3s infinite ease-in-out;
+}
+
+@keyframes sway {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+}
+
+/* MAIN */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+    z-index: 10;
+}
+
+/* BANNER - CARTOON STYLE */
+.banner {
+    background: #FFE135;
+    padding: 40px 70px;
+    border-radius: 20px;
+    border: 6px solid #333;
+    box-shadow: 8px 8px 0 #333;
+    margin-bottom: 50px;
+    position: relative;
+    transform: rotate(-2deg);
+}
+
+.banner::before {
+    content: '🖍️';
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    font-size: 3rem;
+    transform: rotate(-30deg);
+}
+
+.banner::after {
+    content: '🖍️';
+    position: absolute;
+    bottom: -30px;
+    right: -30px;
+    font-size: 3rem;
+    transform: rotate(30deg);
+}
+
+.banner h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 3.2rem;
+    color: #E53935;
+    text-align: center;
+    text-shadow: 3px 3px 0 #333, -1px -1px 0 #fff;
+    letter-spacing: 3px;
+}
+
+/* BUTTONS */
+.buttons {
+    position: relative;
+    height: 100px;
+}
+
+.btn {
+    padding: 20px 50px;
+    font-size: 1.8rem;
+    border: 5px solid #333;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: 2px;
+    position: fixed;
+    font-family: 'Bangers', cursive;
+    text-transform: uppercase;
+    box-shadow: 5px 5px 0 #333;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 #333;
+}
+
+/* YES - SHIN-CHAN RED */
+.btn-yes {
+    background: #E53935;
+    color: #FFE135;
+}
+
+/* NO - SHIN-CHAN BLUE */
+.btn-no {
+    background: #1E88E5;
+    color: #fff;
+}
+
+/* CELEBRATION SCREEN */
+.celebration {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, #FFE135 0%, #FFEB3B 50%, #FFF59D 100%);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.celebration.active {
+    display: flex;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* THANK YOU MESSAGE */
+.thank-you {
+    font-family: 'Bangers', cursive;
+    font-size: 3.5rem;
+    color: #E53935;
+    text-shadow: 4px 4px 0 #333, -2px -2px 0 #fff;
+    margin-bottom: 20px;
+    animation: wiggle 0.5s infinite;
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+}
+
+/* GULAABI DIL */
+.pink-hearts {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* BIG GIF */
+.big-gif {
+    max-width: 70vw;
+    max-height: 50vh;
+    border-radius: 20px;
+    border: 8px solid #333;
+    box-shadow: 10px 10px 0 #333;
+    animation: popIn 0.5s ease forwards;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0) rotate(-10deg); }
+    70% { transform: scale(1.1) rotate(3deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+/* CONFETTI */
+.confetti {
+    position: fixed;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #333;
+    animation: fall 3s linear infinite;
+}
+
+@keyframes fall {
+    from { transform: translateY(-100vh) rotate(0deg); }
+    to { transform: translateY(100vh) rotate(720deg); }
+}
+
+/* FLOATING HEARTS */
+.floating-heart {
+    position: fixed;
+    font-size: 3rem;
+    animation: floatUp 4s ease-out forwards;
+    filter: drop-shadow(2px 2px 0 #333);
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0); opacity: 1; }
+    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+}
+    to { transform: translateY(100vh) rotate(720deg); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- CARTOON CLOUDS -->
+<div class="cloud cloud-1"></div>
+<div class="cloud cloud-2"></div>
+<div class="cloud cloud-3"></div>
+
+<!-- SHIN-CHAN THEMED EMOJIS -->
+<div class="shinchan-emoji" style="top:25%; left:5%;">🖍️</div>
+<div class="shinchan-emoji" style="top:30%; right:8%;">🎨</div>
+<div class="shinchan-emoji" style="top:65%; left:8%;">🍫</div>
+<div class="shinchan-emoji" style="top:55%; right:10%;">🎀</div>
+<div class="shinchan-emoji" style="top:45%; left:3%;">⭐</div>
+
+<!-- GRASS -->
+<div class="grass"></div>
+
+<div class="container">
+    <div class="banner">
+        <h1 id="title"></h1>
+    </div>
+
+    <div class="buttons">
+        <button class="btn btn-yes" id="btnA">YES ❤️</button>
+        <button class="btn btn-no" id="btnB">NO 💔</button>
+    </div>
+</div>
+
+<!-- CELEBRATION -->
+<div class="celebration" id="celebration"></div>
+
+<script>
+/* TYPING EFFECT */
+const title = document.getElementById("title");
+const text = "Will You Be My Valentine? 💗";
+let i = 0;
+
+function typeText() {
+    if (i < text.length) {
+        title.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeText, 70);
+    }
+}
+typeText();
+
+/* BUTTON LOGIC */
+const btnA = document.getElementById("btnA");
+const btnB = document.getElementById("btnB");
+
+// Background music - loops continuously
+const bgMusic = new Audio("https://www.myinstants.com/media/sounds/dexter-meme.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.5;
+
+// Start music on first user interaction (browsers require this)
+function startMusic() {
+    bgMusic.play().catch(() => {});
+    document.removeEventListener('click', startMusic);
+    document.removeEventListener('mousemove', startMusic);
+    document.removeEventListener('touchstart', startMusic);
+}
+document.addEventListener('click', startMusic);
+document.addEventListener('mousemove', startMusic);
+document.addEventListener('touchstart', startMusic);
+
+// Swap sound effect
+const swapSound = new Audio("https://www.myinstants.com/media/sounds/movie_1.mp3");
+swapSound.volume = 0.7;
+
+let leftIsYes = true;
+let swapCooldown = false;
+let celebrated = false;
+
+/* PLACE BUTTONS */
+function placeButtons() {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2 + 90;
+
+    btnA.style.left = centerX - 220 + "px";
+    btnA.style.top = centerY + "px";
+
+    btnB.style.left = centerX + 80 + "px";
+    btnB.style.top = centerY + "px";
+}
+placeButtons();
+window.addEventListener("resize", placeButtons);
+
+/* UPDATE LOOK */
+function updateButtonAppearance() {
+    if (leftIsYes) {
+        btnA.textContent = "YES ❤️";
+        btnA.className = "btn btn-yes";
+        btnB.textContent = "NO 💔";
+        btnB.className = "btn btn-no";
+    } else {
+        btnA.textContent = "NO 💔";
+        btnA.className = "btn btn-no";
+        btnB.textContent = "YES ❤️";
+        btnB.className = "btn btn-yes";
+    }
+
+    btnA.style.pointerEvents = btnA.textContent.includes("YES") ? "auto" : "none";
+    btnB.style.pointerEvents = btnB.textContent.includes("YES") ? "auto" : "none";
+}
+updateButtonAppearance();
+
+/* SWAP WHEN NEAR NO */
+document.addEventListener("mousemove", (e) => {
+    // Stop swapping after celebration
+    if (celebrated) return;
+    
+    const noBtn = leftIsYes ? btnB : btnA;
+    const rect = noBtn.getBoundingClientRect();
+
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+
+    if (dist < 140 && !swapCooldown) {
+        leftIsYes = !leftIsYes;
+        updateButtonAppearance();
+
+        // Play swap sound
+        swapSound.currentTime = 0;
+        swapSound.play().catch(() => {});
+
+        noBtn.style.transform = "scale(0.8) rotate(10deg)";
+        setTimeout(() => noBtn.style.transform = "scale(1) rotate(0)", 150);
+
+        swapCooldown = true;
+        setTimeout(() => swapCooldown = false, 300);
+    }
+});
+
+/* CLICK HANDLER */
+btnA.addEventListener("click", tryCelebrate);
+btnB.addEventListener("click", tryCelebrate);
+
+function tryCelebrate(e) {
+    if (e.target.textContent.includes("YES")) {
+        celebrate();
+    }
+}
+
+/* BIG GIF CELEBRATION */
+function celebrate() {
+    celebrated = true;
+    
+    // Stop background music
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    
+    // Hide buttons
+    btnA.style.display = 'none';
+    btnB.style.display = 'none';
+    
+    // Play celebration sound
+    const celebrationSound = new Audio("https://www.myinstants.com/media/sounds/abhi-maza-ayagga.mp3");
+    celebrationSound.volume = 0.8;
+    celebrationSound.play().catch(() => {});
+    
+    const celebration = document.getElementById("celebration");
+    celebration.classList.add("active");
+
+    // ADD YOUR GIF LINK HERE - Replace the src URL with your gif
+    celebration.innerHTML = `
+        <div class="thank-you">Thank You So Much!</div>
+        <div class="pink-hearts">💗💗💗 Gulaabi Dil 💗💗💗</div>
+        <img 
+            class="big-gif" 
+            src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExeW90dW95czdyZTB0dWpqZm95ZWs4emNjcXFvMWtpbGk1a2hteWR4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/blSTtZehjAZ8I/giphy.gif"
+            alt="Shin-chan Celebration"
+        />
+    `;
+
+    // Confetti in Shin-chan colors
+    const colors = ["#FFE135", "#E53935", "#1E88E5", "#4CAF50", "#FF69B4"];
+
+    for (let i = 0; i < 150; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement("div");
+            confetti.className = "confetti";
+            confetti.style.left = Math.random() * 100 + "vw";
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
+            confetti.style.borderRadius = Math.random() > 0.5 ? "50%" : "0";
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 4000);
+        }, i * 15);
+    }
+
+    // Floating pink hearts (gulaabi dil)
+    for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+            const heart = document.createElement("div");
+            heart.className = "floating-heart";
+            heart.textContent = "💗";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDelay = Math.random() * 2 + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }, i * 200);
+    }
+}
+</script>
+
+</body>
+</html>
