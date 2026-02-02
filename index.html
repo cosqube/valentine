@@ -88,6 +88,45 @@ body {
     50% { transform: translateX(10px); }
 }
 
+/* MUSIC BUTTON */
+.music-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    background: linear-gradient(135deg, #FFE135, #FFEB3B);
+    border: 4px solid #333;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 5px 5px 0 #333;
+    transition: transform 0.1s, box-shadow 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bangers', cursive;
+    font-weight: 700;
+    animation: musicBounce 0.6s ease-in-out;
+}
+
+.music-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 #333;
+}
+
+.music-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 3px 3px 0 #333;
+}
+
+@keyframes musicBounce {
+    0% { transform: scale(0) rotate(-20deg); }
+    70% { transform: scale(1.1) rotate(5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
 /* MAIN */
 .container {
     display: flex;
@@ -290,6 +329,9 @@ body {
 <!-- GRASS -->
 <div class="grass"></div>
 
+<!-- MUSIC BUTTON -->
+<button class="music-btn" id="musicBtn" title="Toggle Music">🎵</button>
+
 <div class="container">
     <div class="banner">
         <h1 id="title"></h1>
@@ -327,21 +369,34 @@ const btnB = document.getElementById("btnB");
 const bgMusic = new Audio("https://github.com/cosqube/valentine/raw/refs/heads/main/bg.mp3");
 bgMusic.loop = true;
 bgMusic.volume = 0.5;
+let isMusicPlaying = false;
 
-// Start music on first user interaction (browsers require this)
-function startMusic() {
-    bgMusic.play().catch(() => {});
-    document.removeEventListener('click', startMusic);
-    document.removeEventListener('mousemove', startMusic);
-    document.removeEventListener('touchstart', startMusic);
+// Music button control
+const musicBtn = document.getElementById("musicBtn");
+musicBtn.addEventListener("click", toggleMusic);
+
+function toggleMusic() {
+    if (celebrated) return; // Don't toggle during celebration
+    
+    if (isMusicPlaying) {
+        bgMusic.pause();
+        musicBtn.textContent = "🎵";
+        isMusicPlaying = false;
+    } else {
+        bgMusic.play().then(() => {
+            console.log("BGM started");
+        }).catch((error) => {
+            console.log("BGM play blocked:", error);
+        });
+        musicBtn.textContent = "🎶";
+        isMusicPlaying = true;
+    }
 }
-document.addEventListener('click', startMusic);
-document.addEventListener('mousemove', startMusic);
-document.addEventListener('touchstart', startMusic);
 
-// Swap sound effect
+// Swap sound effect - preload to avoid delays
 const swapSound = new Audio("https://github.com/cosqube/valentine/raw/refs/heads/main/swap.mp3");
 swapSound.volume = 0.7;
+let swapSoundReady = true;
 
 let leftIsYes = true;
 let swapCooldown = false;
@@ -396,9 +451,22 @@ document.addEventListener("mousemove", (e) => {
         leftIsYes = !leftIsYes;
         updateButtonAppearance();
 
-        // Play swap sound
-        swapSound.currentTime = 0;
-        swapSound.play().catch(() => {});
+        // Play swap sound - properly handle audio playback
+        if (swapSoundReady) {
+            swapSoundReady = false;
+            swapSound.currentTime = 0;
+            const playPromise = swapSound.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    swapSoundReady = true;
+                }).catch((error) => {
+                    console.log("Swap sound play failed:", error);
+                    swapSoundReady = true;
+                });
+            } else {
+                swapSoundReady = true;
+            }
+        }
 
         noBtn.style.transform = "scale(0.8) rotate(10deg)";
         setTimeout(() => noBtn.style.transform = "scale(1) rotate(0)", 150);
@@ -422,18 +490,24 @@ function tryCelebrate(e) {
 function celebrate() {
     celebrated = true;
     
-    // Stop background music
+    // Stop background music and hide music button
     bgMusic.pause();
     bgMusic.currentTime = 0;
+    musicBtn.style.display = 'none';
+    isMusicPlaying = false;
     
     // Hide buttons
     btnA.style.display = 'none';
     btnB.style.display = 'none';
     
     // Play celebration sound
-    const celebrationSound = new Audio("https://github.com/cosqube/valentine/raw/refs/heads/main/celebratye.mp3");
+    const celebrationSound = new Audio("https://github.com/cosqube/valentine/raw/refs/heads/main/fcp.mp3");
     celebrationSound.volume = 0.8;
-    celebrationSound.play().catch(() => {});
+    celebrationSound.play().then(() => {
+        console.log("Celebration sound playing");
+    }).catch((error) => {
+        console.log("Celebration sound play failed:", error);
+    });
     
     const celebration = document.getElementById("celebration");
     celebration.classList.add("active");
