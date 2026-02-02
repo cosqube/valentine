@@ -324,7 +324,7 @@ const btnA = document.getElementById("btnA");
 const btnB = document.getElementById("btnB");
 
 // Background music - loops continuously
-const bgMusic = new Audio("https://www.myinstants.com/media/sounds/dexter-meme.mp3");
+const bgMusic = new Audio("https://github.com/cosqube/valentine/raw/refs/heads/main/bg.mp3");
 bgMusic.loop = true;
 bgMusic.volume = 0.5;
 
@@ -340,7 +340,7 @@ document.addEventListener('mousemove', startMusic);
 document.addEventListener('touchstart', startMusic);
 
 // Swap sound effect
-const swapSound = new Audio("https://www.myinstants.com/media/sounds/movie_1.mp3");
+const swapSound = new Audio("https://github.com/cosqube/valentine/raw/refs/heads/main/swap.mp3");
 swapSound.volume = 0.7;
 
 let leftIsYes = true;
@@ -431,7 +431,7 @@ function celebrate() {
     btnB.style.display = 'none';
     
     // Play celebration sound
-    const celebrationSound = new Audio("https://www.myinstants.com/media/sounds/abhi-maza-ayagga.mp3");
+    const celebrationSound = new Audio("https://github.com/cosqube/valentine/raw/refs/heads/main/celebratye.mp3");
     celebrationSound.volume = 0.8;
     celebrationSound.play().catch(() => {});
     
